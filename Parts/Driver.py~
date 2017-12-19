@@ -1,0 +1,48 @@
+import pygame
+import MotorDriver
+import ServoMotor
+
+pygame.init()
+motordriver = MotorDriver()
+servoMotor = ServoMotor()
+while True:
+    for event in pygame.event.get():
+        '''if event.type == KEYDOWN:
+            if event.key == K_UP:
+                motordriver.stop()
+                motordriver.goForward(50)
+            elif event.key == K_DOWN:
+                motordriver.stop()
+                motordriver.goBackward(30)
+            elif event.key == K_RIGHT:
+                servomotor.servoControl(servomotor.right)
+            elif event.key == K_LEFT:
+                servomotor.servoControl(servomotor.left)'''
+                
+
+        pressed = pygame.key.get_pressed()
+        if pressed[K_UP] && pressed[K_DOWN]:
+            moverdriver.breaking():
+        else if pressed[K_UP]:
+            motordriver.goForward(50)
+        else if pressed[K_DOWN]:
+            motordriver.goBackward(30)
+        else if pressed[K_LEFT] && pressed[K_RIGHT]:
+            servomotor.servoReset()
+        else if pressed[K_LEFT]:
+            servomotor.servocontrol(servomotor.left)
+        else if pressed[K_RIGHT]:
+            servomotor.servocontrol(servomotor.right)
+            
+            
+        '''if event.type == KEYUP:
+            if event.key == K_UP|K_DOWN:
+                motordriver.stop()
+            elif event.key == K_RIGHT | K_LEFT:
+                servomotor.'''
+            
+                
+            
+                
+                
+    

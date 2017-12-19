@@ -1,0 +1,15 @@
+import PRi.GPIO
+
+class Light:
+    def __init__(self):
+        self.channels = [17,22,27]
+        GPIO.setup(channels,GPIO.OUT)
+       
+    def headLampOn(self):
+        GPIO.output(22)
+
+    def
+
+    def clean(self):
+        GPIO.cleanup(channels)
+        
