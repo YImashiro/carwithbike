@@ -1,14 +1,17 @@
 #!/usr/bin/python
 import RPi.GPIO as GPIO
+import sys
 
 class MotorDriver:
     freq = 50
     duty = 0.8
 
-    def __init__(self):
-        channels = [2,3]
+    def __init__(self,pin1,pin2):
+        channels = [pin1,pin2]
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(channels,GPIO.OUT)
-
+        
+            
     def __setting(self):
         GPIO.output(self.channels,GPIO.LOW)
         sleep(0.0001)

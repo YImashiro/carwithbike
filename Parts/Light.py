@@ -1,16 +1,16 @@
-import PRi.GPIO
+import RPi.GPIO as GPIO
 
 class Light:
     freq = 1
     duty = 0.5
     def __init__(self):
         self.channels = [17,22,27]
-        GPIO.setup(channels,GPIO.OUT)
-        pwm_left = GPIO.pwm(17,freq)
-        pwm_right = GPIO.pwm(27,freq)
+        GPIO.setup(self.channels,GPIO.OUT)
+        pwm_left = GPIO.PWM(17,self.freq)
+        pwm_right = GPIO.PWM(27,self.freq)
 
-    def setup(self):
-        GPIO.setup(channels,GPIO.OUT)
+    def __setup(self):
+        GPIO.setup(self.channels,GPIO.OUT)
         pwm_left = GPIO.pwm(17,freq)
         pwm_right = GPIO.pwm(27,freq)
         

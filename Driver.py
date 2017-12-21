@@ -1,43 +1,45 @@
 import pygame
-import MotorDriver
-import ServoMotor
-import Light
+from Parts import *
+import RPi.GPIO as GPIO
+import sys
+
 
 pygame.init()
-motordriver = MotorDriver()
-servoMotor = ServoMotor()
-light = Light()
-
+motordriver = MotorDriver.MotorDriver(2,3)
+servoMotor = ServoMotor.ServoMotor(4)
+light = Light.Light()
+    
 lw,rw,hl = 0,0,0 #flag
-while True:
-    for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == 'K_ESCAPE':
-                light.clean()
-                servomotor.clean()
-                motordriver.clean()
-            
-            if event.key == 'K_f':
-                if lw = 0:
-                    light.leftWinkerOn()
-                else:
-                    light.leftWinkerOff()
-                lw = 1-lw
-                
-            elif event.key == 'K_j':
-                if rw = 0:
-                    light.rightWinkerOn()
-                else:
-                    light.rightWinkerOff()
-                rw = 1-rw
-                
-            elif event.key == 'K_h':
-                if hl = 0:
-                    light.headLampOn()
-                else:
-                    light.headLampOff()
-                hl = 1-hl
-                
+try:
+    while True:
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == 'K_ESCAPE':
+                    light.clean()
+                    servomotor.clean()
+                    motordriver.clean()
+                    
+                if event.key == 'K_f':
+                    if lw == 0:
+                        light.leftWinkerOn()
+                    else:
+                        light.leftWinkerOff()
+                        lw = 1-lw
+                    
+                elif event.key == 'K_j':
+                    if rw == 0:
+                        light.rightWinkerOn()
+                    else:
+                        light.rightWinkerOff()
+                        rw = 1-rw
+                    
+                elif event.key == 'K_h':
+                    if hl == 0:
+                        light.headLampOn()
+                    else:
+                        light.headLampOff()
+                        hl = 1-hl
+                    
         '''    if event.key == K_UP:
                 motordriver.stop()
                 motordriver.goForward(50)
@@ -48,20 +50,20 @@ while True:
                 servomotor.servoControl(servomotor.right)
             elif event.key == K_LEFT:
                 servomotor.servoControl(servomotor.left)'''
-                
+        
 
         pressed = pygame.key.get_pressed()
-        if pressed[K_UP] and pressed[K_DOWN]:
+        if 'K_UP' and 'K_DOWN' in pressed:
             moverdriver.breaking()
-        elif pressed[K_UP]:
+        elif 'K_UP' in pressed:
             motordriver.goForward(50)
-        elif pressed[K_DOWN]:
+        elif 'K_DOWN' in pressed:
             motordriver.goBackward(30)
-        elif pressed[K_LEFT] and pressed[K_RIGHT]:
+        if 'K_LEFT' and 'K_RIGHT' in pressed:
             servomotor.servoReset()
-        elif pressed[K_LEFT]:
+        elif 'K_LEFT' in pressed:
             servomotor.servocontrol(servomotor.left)
-        elif pressed[K_RIGHT]:
+        elif 'K_RIGHT' in pressed:
             servomotor.servocontrol(servomotor.right)
             
             
@@ -70,9 +72,7 @@ while True:
                 motordriver.stop()
             elif event.key == K_RIGHT or K_LEFT:
                 servomotor.'''
-            
-                
-            
-                
-                
-    
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
+    sys.exit(0)
