@@ -8,9 +8,9 @@ pygame.init()
 GPIO.setmode(GPIO.BCM)
 motordriver = MotorDriver.MotorDriver(2,3)
 servoMotor = ServoMotor.ServoMotor(4)
-light = Light.Light()
-    
+light = Light.Light(17,22,27)    
 lw,rw,hl = 0,0,0 #flag
+
 try:
     while True:
         for event in pygame.event.get():
