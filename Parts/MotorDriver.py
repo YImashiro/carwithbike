@@ -1,40 +1,51 @@
 #!/usr/bin/python
 import RPi.GPIO as GPIO
 import sys
+import time
 
 class MotorDriver:
-    freq = 50
-    duty = 0.8
+    freq = 100
+    duty = 100
+    f,b = 0,0
 
     def __init__(self,pin1,pin2):
-        channels = [pin1,pin2]
-        GPIO.setup(channels,GPIO.OUT)
-        
+        GPIO.setmode(GPIO.BCM)
+        self.channels = [pin1,pin2]
+        GPIO.setup(self.channels,GPIO.OUT)
             
     def __setting(self):
         GPIO.output(self.channels,GPIO.LOW)
-        sleep(0.0001)
+        time.sleep(0.0001)
+        if(self.f):
+            self.pwmf.stop()
+            self.f = 0
+        if(self.b):
+            self.pwmb.stop()
+            self.b = 0
         
-    def goFoward(self, duty):
+    def goForward(self):
         self.__setting()
-        pwm = GPIO.PWM(self.channels[0],self.freq)
-        pwm.start(self.duty)
-
-    def goBackward(self,duty):
+        self.pwmf = GPIO.PWM(self.channels[0],self.freq)
+        self.pwmf.start(self.duty)
+        self.f = 1
+        
+    def goBackward(self):
         self.__setting()
-        pwm = GPIO.PWM(self.channels[1],self.freq)
-        pwm.start(self.duty)
-
+        self.pwmb = GPIO.PWM(self.channels[1],self.freq)
+        self.pwmb.start(self.duty)
+        self.b = 1
+        
     def turbo(self):
         self.__setting()
         pwm = GPIO.PWM(self.channels[0],self.freq)
-        pwm.start(1.0)
+        pwm.start(100)
         sleep(1)
         pwm.stop()
 
     def breaking(self):
         self.__setting()
         GPIO.output(self.channels,GPIO.HIGH)
+        time.sleep(3)
 
     def stop(self):
         self.__setting()
@@ -44,10 +55,7 @@ class MotorDriver:
 
 def test():
     try:
-        import time
-        GPIO.setmode(GPIO.BCM)
-        motor = MotorDriver(2,3)
-        print("goForward")
+        motor= MotorDriver(19,26)
         motor.goForward()
         time.sleep(10)
         print("goBackward")
@@ -55,15 +63,14 @@ def test():
         time.sleep(10)
         print("breaking")
         motor.stop()
-        time.sleep(5)
+        time.sleep(3)
         print("stop")
         motor.breaking()
-        time.sleep(5)
+        time.sleep(3)
     except KeyboardInterrupt:
         pass
     finally:   
         motor.clean()
         print("end")
-
 if __name__ == '__main__':
     test()
