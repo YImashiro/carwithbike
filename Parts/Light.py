@@ -4,7 +4,7 @@ class Light:
     freq = 1
     duty = 0.5
     def __init__(self,pin1,pin2,pin3):
-        self.channels = [17,22,27]
+        self.channels = [pin1,pin2,pin3]
         GPIO.setup(self.channels,GPIO.OUT)
         pwm_left = GPIO.PWM(pin1,self.freq)
         pwm_right = GPIO.PWM(pin3,self.freq)
@@ -31,4 +31,23 @@ class Light:
 
     def clean(self):
         GPIO.cleanup(channels)
-        
+
+def test():
+    GPIO.setmode(GPIO.BCM)
+    import time
+    light = Light(17,22,27)
+    print("headlamp on")
+    light.headLampOn()
+    time.sleep(5)
+    print("headlamp off")
+    light.headLampOff()
+    print("leftWinker On")
+    light.leftwinkerOn()
+    time.sleep(5)
+    print("right on, left Off")
+    light.rightWinkerOn()
+    time.sleep(5)
+    light.clean()
+    
+if __name__ == "__main__":
+    test()
