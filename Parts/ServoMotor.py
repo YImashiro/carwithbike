@@ -9,28 +9,33 @@ class ServoMotor:
     
     def __init__(self,pin):
         self.freq = 50.0
-        self.duty = self.middle / (1/self.freq)
+        self.period = 1000.0/self.freq
         self.pin = pin
-        self.period = 1.0/self.freq
         GPIO.setup(pin,GPIO.OUT)
         self.pwm = GPIO.PWM(self.pin,self.freq)
         #duty ratio
-        self.right = self.highest/ self.period
-        self.left = 0
-        self.straight = self.middle/ self.period
+        self.right = self.highest/ self.period * 100
+        self.left = self.lowest / self.period * 100
+        self.straight = self.middle/ self.period * 100
         self.pwm.start(self.straight)
-    
 
+    def __steeringControl(self,percentage):
+        n = (self.right - self.straight)/100
+        return percentage * n  
+
+    def steeringControl(self,percentage):
+        self.pwm.start(self.straight + self.__steeringControl(percentage))
+        
     def servoControl(self,dir):
         if dir == "left":
-            pwm.start(left)
+            self.pwm.start(self.left)
         elif dir == "right":
-            pwm.start(right)
+            self.pwm.start(self.right)
         else:
-            pwm.start(middle)
+            self.pwm.start(self.straight)
 
     def servoReset(self):
-        pwm.start(middle)
+        self.pwm.start(self.straight)
 
     def clean(self):
         GPIO.cleanup(self.pin)
@@ -40,10 +45,18 @@ def test():
     import time
     GPIO.setmode(GPIO.BCM)
     servo = ServoMotor(4)
-    servoControl("left")
-    time.sleep(5)
-    servo.servoControl("right")
-    time.sleep(5)
+    print("middle")
+    time.sleep(3)
+    print("left")
+    servo.steeringControl(-100)
+    time.sleep(3)
+    servo.steeringControl(-50)
+    time.sleep(3)
+    print("right")
+    servo.steeringControl(100)
+    time.sleep(3)
+    servo.steeringControl(50)
+    time.sleep(3)
     servo.reset()
 
 if __name__ == "__main__":
