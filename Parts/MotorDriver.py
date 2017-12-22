@@ -41,3 +41,29 @@ class MotorDriver:
         
     def clean(self):
         GPIO.cleanup(self.channels)
+
+def test():
+    try:
+        import time
+        GPIO.setmode(GPIO.BCM)
+        motor = MotorDriver(2,3)
+        print("goForward")
+        motor.goForward()
+        time.sleep(10)
+        print("goBackward")
+        motor.goBackward()
+        time.sleep(10)
+        print("breaking")
+        motor.stop()
+        time.sleep(5)
+        print("stop")
+        motor.breaking()
+        time.sleep(5)
+    except KeyboardInterrupt:
+        pass
+    finally:   
+        motor.clean()
+        print("end")
+
+if __name__ == '__main__':
+    test()

@@ -3,12 +3,9 @@ import RPi.GPIO as GPIO
 class ServoMotor:
     '''PWM period may be 50Hz(20ms) 
        Duty Cycle is 0.5~2.4ms ~0.5ms is -90deg /~2.4ms +90deg'''
-
     #pulsetime
-    highest = 2.4
-    lowest = 0.5
+    highest, lowest = 2.4, 0.5
     middle =  (highest+lowest)/2
-
     
     def __init__(self,pin):
         self.freq = 50.0
@@ -39,5 +36,15 @@ class ServoMotor:
         GPIO.cleanup(self.pin)
     
         
-        
+def test():
+    import time
+    GPIO.setmode(GPIO.BCM)
+    servo = ServoMotor(4)
+    servoControl("left")
+    time.sleep(5)
+    servo.servoControl("right")
+    time.sleep(5)
+    servo.reset()
 
+if __name__ == "__main__":
+    test()
