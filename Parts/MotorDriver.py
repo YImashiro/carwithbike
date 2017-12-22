@@ -8,7 +8,6 @@ class MotorDriver:
 
     def __init__(self,pin1,pin2):
         channels = [pin1,pin2]
-        GPIO.setmode(GPIO.BCM)
         GPIO.setup(channels,GPIO.OUT)
         
             
@@ -18,27 +17,27 @@ class MotorDriver:
         
     def goFoward(self, duty):
         self.__setting()
-        pwm = GPIO.PWM(2,self.freq)
+        pwm = GPIO.PWM(self.channels[0],self.freq)
         pwm.start(self.duty)
 
     def goBackward(self,duty):
         self.__setting()
-        pwm = GPIO.PWM(3,self.freq)
+        pwm = GPIO.PWM(self.channels[1],self.freq)
         pwm.start(self.duty)
 
     def turbo(self):
         self.__setting()
-        pwm = GPIO.PWM(2,self.freq)
+        pwm = GPIO.PWM(self.channels[0],self.freq)
         pwm.start(1.0)
         sleep(1)
         pwm.stop()
 
     def breaking(self):
         self.__setting()
-        GPIO.output(channels,GPIO.HIGH)
+        GPIO.output(self.channels,GPIO.HIGH)
 
     def stop(self):
-        GPIO.output(channels,PGIO.LOW)
-
+        self.__setting()
+        
     def clean(self):
-        GPIO.cleanup(channels)
+        GPIO.cleanup(self.channels)

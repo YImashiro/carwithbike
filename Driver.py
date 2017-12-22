@@ -5,6 +5,7 @@ import sys
 
 
 pygame.init()
+GPIO.setmode(GPIO.BCM)
 motordriver = MotorDriver.MotorDriver(2,3)
 servoMotor = ServoMotor.ServoMotor(4)
 light = Light.Light()
