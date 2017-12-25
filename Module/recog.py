@@ -10,9 +10,16 @@ def pink_detect(img):
     target may be [327/2,255*0.92,255]'''
     
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    pink_min = np.array([155,50,50])
-    pink_max = np.array([165,255,255])
-    return cv2.inRange(hsv, pink_min,pink_max)
+    pink_min = np.array([160,0,0])
+    pink_max = np.array([179,255,255])
+    
+    mask1 = cv2.inRange(hsv, pink_min,pink_max)
+
+    pink_min2 = np.array([0,0,0])
+    pink_max2 = np.array([10,255,255])
+
+    mask2 = cv2.inRange(hsv,pink_min2,pink_max2)
+    return mask1 + mask2
 
 def find_target(mask):
     img,contours,hierarchy  = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -73,4 +80,4 @@ def setting():
     return left_coord,center_coord,right_coord
 
 if __name__ == "__main__":
-    setting()
+    capturevideo()
