@@ -23,12 +23,15 @@ delegate = cscsensor.DelegateForCSC()
 peripheral.withDelegate(delegate)
 peripheral.writeCharacteristic(12,(1).to_bytes(2, byteorder='little'))
 duty = 0
+cadence = 0
 motor = MotorDriverwithCSC(pin1,pin2)
 
 def getspeed():
     try:
         while delegate.flag:
             if peripheral.waitForNotifications(10):
+                global duty
+                global cadence
                 duty = convertCSCtoDuty(delegate.speed)
                 cadence = delegate.cadence
                 continue
@@ -46,6 +49,7 @@ th1.start()
 
 while True:
     try:
-        motor.gowithCSC(duty,cadence)
+        #motor.gowithCSC(duty,cadence)
+        print("duty:{} ,cadence:{}".format(duty,cadence))
     except:
         break
