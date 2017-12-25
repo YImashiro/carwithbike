@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import time
 import copy
 
 def pink_detect(img):
@@ -27,26 +26,48 @@ def find_target(mask):
     return maxrect
 
 def capturevideo():
-    #use web camera
-    cap = cv2.VideoCapture(0)
-    while(cap.isOpened()):
-        #_:T or F, frame:frame
-        _, frame = cap.read()
-        #cv2.GaussianBlur(img,filter_range,variance)
-        denoise = cv2.GaussianBlur(frame,(25,25),3)
-        mask = pink_detect(frame)
-        maskd = pink_detect(denoise)
-        cv2.imshow("capture",frame)
+    try:
+        cap = cv2.VideoCapture(0)
+        while(cap.isOpened()):
+            #_:T or F, frame:frame
+            _, frame = cap.read()
+            height = frame.shape[0]
+            width = frame.shape[1]
+            #cv2.GaussianBlur(img,filter_range,variance)
+            mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
+            rect = find_target(mask)
+            drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
+            grav = (rect[0]+rect[2]/2,rect[1]+rect[3]/2)
+            #print("gravity point: {} , {} ".format(grav[0],grav[1]))
+            cv2.line(drawrect,(width/2,0),(width/2,height),(255,0,0),5)
+            cv2.circle(drawrect,grav, 3, (255, 255, 0), 5) 
+            cv2.imshow("rect",drawrect)
+            cv2.moveWindow('rect', 1000, 0)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    except:
+        pass
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
+        return grav
 
-        rect = find_target(mask)
-        detected = cv2.rectangle(denoise,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
-        print("gravity point: {} , {} ".format(rect[0]+rect[2]/2,rect[1]+rect[3]/2))
-        cv2.imshow("rect",detected)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        
-    cap.release()
-    cv2.destroyAllWindows()
+def returngrav():
+    capturevideo()
+    return grav
 
-
-capturevideo()
+def setting():
+    left_coord,center_coord,right_coord = [],[],[]
+    print("First setup. place your handle straight and place light blue point on the center line ")
+    center_coord = capturevideo()
+    print("place your handle at 45 degrees to the left")
+    print("if you have placed,push q")
+    left_coord = capturevideo()
+    print(left_coord)
+    print("Last step. next place your handle at 45 degrees to the right")
+    print("if you have placed,push q")
+    right_coord = capturevideo()
+    print("well done")
+    print("your handle sycronizes with car!!")
+    
+    return left_coord,center_coord,right_coord
