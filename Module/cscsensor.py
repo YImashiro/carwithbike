@@ -73,25 +73,29 @@ class DelegateForCSC(btle.DefaultDelegate):
             self.printCadence(data)
             
         elif data[0] == 3:
-            print("CADENCE SPEED AVAILABLE")
             self.printSpeed(data)
-            self.printCadence(data)
+            self.speed(data)
+            self.cadence(data)
+
+if __name__ == "__main__":       
+    peripheral = Peripheral("d8:e3:66:b3:b9:95",btle.ADDR_TYPE_RANDOM)
+    delegate = DelegateForCSC()
+    peripheral.withDelegate(delegate)
+    peripheral.writeCharacteristic(12,(1).to_bytes(2, byteorder='little'))
+
+    try:
+        while delegate.flag:
+            if peripheral.waitForNotifications(10):
+                delegate.speed
+                continue
+            break
+    except:
+        print("disconnected")
+        
+    finally:
+        peripheral.disconnect()
+        sys.exit(0)
 
 
-print("a")            
-peripheral = Peripheral("d8:e3:66:b3:b9:95",btle.ADDR_TYPE_RANDOM)
-delegate = DelegateForCSC()
-peripheral.withDelegate(delegate)
-peripheral.writeCharacteristic(12,(1).to_bytes(2, byteorder='little'))
 
-try:
-    while delegate.flag:
-        if peripheral.waitForNotifications(10):
-            continue
-        break
-except:
-    print("disconnected")
-
-finally:
-    peripheral.disconnect()
-    sys.exit(0)
+    

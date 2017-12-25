@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import RPi.GPIO as GPIO
 import sys
 import time
@@ -23,16 +23,16 @@ class MotorDriver:
             self.pwmb.stop()
             self.b = 0
         
-    def goForward(self):
+    def goForward(self,duty=self.duty):
         self.__setting()
         self.pwmf = GPIO.PWM(self.channels[0],self.freq)
-        self.pwmf.start(self.duty)
+        self.pwmf.start(duty)
         self.f = 1
         
-    def goBackward(self):
+    def goBackward(self,duty=self.duty):
         self.__setting()
         self.pwmb = GPIO.PWM(self.channels[1],self.freq)
-        self.pwmb.start(self.duty)
+        self.pwmb.start(duty)
         self.b = 1
         
     def turbo(self):
@@ -72,5 +72,6 @@ def test():
     finally:   
         motor.clean()
         print("end")
+
 if __name__ == '__main__':
     test()

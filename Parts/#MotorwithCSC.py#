@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+import RPi.GPIO as GPIO
+import sys
+import time
+from ../Module import cscsensor
+
+class MotorwithCSC(MotorDriver):
+    def
