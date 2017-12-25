@@ -25,6 +25,11 @@ class ServoMotor:
 
     def steeringControl(self,percentage):
         self.pwm.start(self.straight + self.__steeringControl(percentage))
+
+    def turnLeft(self):
+        self.steeringControl(-50)
+    def turnRight(self):
+        self.steeringControl(50)
         
     def servoControl(self,dir):
         if dir == "left":
@@ -50,14 +55,14 @@ def test():
     print("left")
     servo.steeringControl(-100)
     time.sleep(3)
-    servo.steeringControl(-50)
+    servo.turnLeft()
     time.sleep(3)
     print("right")
     servo.steeringControl(100)
     time.sleep(3)
-    servo.steeringControl(50)
+    servo.turnRight()
     time.sleep(3)
-    servo.reset()
-
+    servo.servoReset()
+    servo.clean()
 if __name__ == "__main__":
     test()

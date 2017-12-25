@@ -34,12 +34,12 @@ def test():
     import time
     try:
         light = Light(17,22,27)
-        '''print("headlamp on")
+        print("headlamp on")
         light.headLampOn()
         time.sleep(5)
         print("headlamp off")
         light.headLampOff()
-        '''
+        
         print("right on, left Off")
         light.rightWinkerOn()
         time.sleep(5)
