@@ -1,72 +1,84 @@
 import pygame
-from Parts import *
-import RPi.GPIO as GPIO
+from pygame.locals import *
+#from Parts import *
+#import RPi.GPIO as GPIO
 import sys
 
-
-pygame.init()
-GPIO.setmode(GPIO.BCM)
+def makeScreen():
+    SCREEN_SIZE = (100,100)
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE)
+    screen.fill((0,0,0))
+    
+'''GPIO.setmode(GPIO.BCM)
 motordriver = MotorDriver.MotorDriver(2,3)
 servoMotor = ServoMotor.ServoMotor(4)
 light = Light.Light(17,22,27)    
+'''
 lw,rw,hl = 0,0,0 #flag
 
+
+makeScreen()
 try:
     while True:
         for event in pygame.event.get():
             if event.type == KEYDOWN:
-                if event.key == 'K_ESCAPE':
-                    light.clean()
+                if event.key == K_ESCAPE:
+                    print("K_ESCAPE")
+                    '''light.clean()
                     servomotor.clean()
                     motordriver.clean()
-                    
-                if event.key == 'K_f':
+                    '''
+                elif event.key == K_f:
                     if lw == 0:
-                        light.leftWinkerOn()
+                        #light.leftWinkerOn()
+                        print("K_f,{}".format(lw))
                     else:
-                        light.leftWinkerOff()
-                        lw = 1-lw
+                        #light.leftWinkerOff()
+                        print("K_f,{}".format(lw))
+                    lw = 1-lw
                     
-                elif event.key == 'K_j':
+                elif event.key == K_j:
                     if rw == 0:
-                        light.rightWinkerOn()
+                        print("K_j,{}".format(rw))
+                        #light.rightWinkerOn()
                     else:
-                        light.rightWinkerOff()
-                        rw = 1-rw
+                        print("K_j,{}".format(rw))
+                        #light.rightWinkerOff()
+                    rw = 1-rw
                     
-                elif event.key == 'K_h':
+                elif event.key == K_h:
                     if hl == 0:
-                        light.headLampOn()
+                        #light.headLampOn()
+                        print("K_h,{}".format(hl))
                     else:
-                        light.headLampOff()
-                        hl = 1-hl
-                    
-        '''    if event.key == K_UP:
-                motordriver.stop()
-                motordriver.goForward(50)
-            elif event.key == K_DOWN:
-                motordriver.stop()
-                motordriver.goBackward(30)
-            elif event.key == K_RIGHT:
-                servomotor.servoControl(servomotor.right)
-            elif event.key == K_LEFT:
-                servomotor.servoControl(servomotor.left)'''
-        
+                        #light.headLampOff()
+                        print("K_h,{}".format(hl))
+                    hl = 1-hl
 
         pressed = pygame.key.get_pressed()
-        if 'K_UP' and 'K_DOWN' in pressed:
-            moverdriver.breaking()
-        elif 'K_UP' in pressed:
-            motordriver.goForward(50)
-        elif 'K_DOWN' in pressed:
-            motordriver.goBackward(30)
-        if 'K_LEFT' and 'K_RIGHT' in pressed:
-            servomotor.servoReset()
-        elif 'K_LEFT' in pressed:
-            servomotor.servocontrol(servomotor.left)
-        elif 'K_RIGHT' in pressed:
-            servomotor.servocontrol(servomotor.right)
+        if pressed[K_UP] and pressed[K_DOWN]:
+            print("K_UP and K_DOWN")
+             #moverdriver.breaking()
+        elif pressed[K_UP]:
+            print("K_UP")
+            #motordriver.goForward(50)
+        elif pressed[K_DOWN]:
+            print("K_DOWN")
+            #motordriver.goBackward(30)
+
             
+        if pressed[K_LEFT] and pressed[K_RIGHT]:
+            print("K_LEFT, K_RIGHT")
+            #servomotor.servoReset()
+        elif pressed[K_LEFT]:
+            print("K_LEFT")
+            #servomotor.servocontrol(servomotor.left)
+        elif pressed[K_RIGHT]:
+            print("K_RIGHT")
+            #servomotor.servocontrol(servomotor.right)
+        else:
+            #servomotor.servoReset()
             
         '''if event.type == KEYUP:
             if event.key == K_UP or K_DOWN:
