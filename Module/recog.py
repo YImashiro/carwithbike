@@ -72,4 +72,5 @@ def setting():
     
     return left_coord,center_coord,right_coord
 
-setting()
+if __name__ == "__main__":
+    setting()
