@@ -8,9 +8,9 @@ class MotorDriver:
     duty = 100
     f,b = 0,0
 
-    def __init__(self,pin1,pin2):
+    def __init__(self,pin1,pin2,pin3):
         GPIO.setmode(GPIO.BCM)
-        self.channels = [pin1,pin2]
+        self.channels = [pin1,pin2,pin3]
         GPIO.setup(self.channels,GPIO.OUT)
             
     def __setting(self):
@@ -23,13 +23,13 @@ class MotorDriver:
             self.pwmb.stop()
             self.b = 0
         
-    def goForward(self,duty=self.duty):
+    def goForward(self,duty=100):
         self.__setting()
         self.pwmf = GPIO.PWM(self.channels[0],self.freq)
         self.pwmf.start(duty)
         self.f = 1
         
-    def goBackward(self,duty=self.duty):
+    def goBackward(self,duty=100):
         self.__setting()
         self.pwmb = GPIO.PWM(self.channels[1],self.freq)
         self.pwmb.start(duty)
@@ -55,16 +55,16 @@ class MotorDriver:
 
 def test():
     try:
-        motor= MotorDriver(19,26)
+        motor= MotorDriver(19,26,13)
         motor.goForward()
         time.sleep(10)
         print("goBackward")
         motor.goBackward()
         time.sleep(10)
-        print("breaking")
+        print("stop")
         motor.stop()
         time.sleep(3)
-        print("stop")
+        print("breaking")
         motor.breaking()
         time.sleep(3)
     except KeyboardInterrupt:
