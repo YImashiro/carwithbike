@@ -26,31 +26,31 @@ def find_target(mask):
     return maxrect
 
 def capturevideo():
-    try:
-        cap = cv2.VideoCapture(0)
-        while(cap.isOpened()):
-            #_:T or F, frame:frame
-            _, frame = cap.read()
-            height = frame.shape[0]
-            width = frame.shape[1]
-            #cv2.GaussianBlur(img,filter_range,variance)
-            mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
-            rect = find_target(mask)
-            drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
-            grav = (rect[0]+rect[2]/2,rect[1]+rect[3]/2)
-            #print("gravity point: {} , {} ".format(grav[0],grav[1]))
-            cv2.line(drawrect,(width/2,0),(width/2,height),(255,0,0),5)
-            cv2.circle(drawrect,grav, 3, (255, 255, 0), 5) 
-            cv2.imshow("rect",drawrect)
-            cv2.moveWindow('rect', 1000, 0)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-    except:
-        pass
-    finally:
-        cap.release()
-        cv2.destroyAllWindows()
-        return grav
+    # try:
+    cap = cv2.VideoCapture(0)
+    while(cap.isOpened()):
+        #_:T or F, frame:frame
+        _, frame = cap.read()
+        height = frame.shape[0]
+        width = frame.shape[1]
+        #cv2.GaussianBlur(img,filter_range,variance)
+        mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
+        rect = find_target(mask)
+        drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
+        grav = (int(rect[0]+rect[2]/2),int(rect[1]+rect[3]/2))
+        #print("gravity point: {} , {} ".format(grav[0],grav[1]))
+        cv2.line(drawrect,(int(width/2),0),(int(width/2),int(height)),(255,0,0),5)
+        cv2.circle(drawrect,grav, 3, (255, 255, 0), 5) 
+        cv2.imshow("rect",drawrect)
+        cv2.moveWindow('rect', 1000, 0)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        # except:
+        #    pass
+        # finally:
+    cap.release()
+    cv2.destroyAllWindows()
+    return grav
 
 def returngrav():
     capturevideo()
@@ -71,3 +71,5 @@ def setting():
     print("your handle sycronizes with car!!")
     
     return left_coord,center_coord,right_coord
+
+setting()
