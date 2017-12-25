@@ -2,17 +2,17 @@ import MotorDriver
 
 class MotorDriverwithCSC(MotorDriver):
 
-    def __goForwardwithCSC(self,speed):
-        self.speed = speed
-        self.goForward(self,duty=speed)
+    def __goForwardwithCSC(self,duty):
+        self.goForward(self,duty)
 
-    def __goBackwardwithCSC(self,speed):
-        self.speed = speed
-        self.goBackward(self,duty=speed)
+    def __goBackwardwithCSC(self,cadence):
+        self.goBackward(self,cadence)
 
-    def gowithCSC(self,speed,cadence):
-        if speed == 0:
-            __goBackwardwithCSC(speed)
+    def gowithCSC(self,duty,cadence):
+        if duty == 0:
+            if cadence > 100:
+                cadence = 100
+            __goBackwardwithCSC(cadence)
         else:
-            __goForwardwithCSC(speed)
+            __goForwardwithCSC(duty)
             

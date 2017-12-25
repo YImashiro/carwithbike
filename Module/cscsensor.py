@@ -41,20 +41,10 @@ class DelegateForCSC(btle.DefaultDelegate):
         self.lcet = ncet
         self.crankrevlast = crankrevnow
 
-        
-    def speed(self,data):
-        self.__speed(data)
-        return self.speed
-
     def printSpeed(self,data):
         self.__speed(data)
         print("speed : {} kph".format(self.speed))
         
-        
-    def cadence(self,data):
-        self.__cadence(data)
-        return self.cadence
-
     def printCadence(self,data):
         self.__cadence(data)
         print("cadence: {} rpm ".format(self.cadence))
@@ -73,9 +63,8 @@ class DelegateForCSC(btle.DefaultDelegate):
             self.printCadence(data)
             
         elif data[0] == 3:
-            self.printSpeed(data)
-            self.speed(data)
-            self.cadence(data)
+            self.__speed(data)
+            self.__cadence(data)
 
 if __name__ == "__main__":       
     peripheral = Peripheral("d8:e3:66:b3:b9:95",btle.ADDR_TYPE_RANDOM)
