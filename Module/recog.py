@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 import copy
+import threading
+grav = (0,0)
+left_coord,center_coord,right_coord = (0,0),(0,0),(0,0)
 
 def pink_detect(img):
     '''RGBtoHSV
@@ -10,13 +13,13 @@ def pink_detect(img):
     target may be [327/2,255*0.92,255]'''
     
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    pink_min = np.array([160,0,0])
+    pink_min = np.array([170,130,130])
     pink_max = np.array([179,255,255])
     
     mask1 = cv2.inRange(hsv, pink_min,pink_max)
 
-    pink_min2 = np.array([0,0,0])
-    pink_max2 = np.array([10,255,255])
+    pink_min2 = np.array([0,130,130])
+    pink_max2 = np.array([9,255,255])
 
     mask2 = cv2.inRange(hsv,pink_min2,pink_max2)
     return mask1 + mask2
@@ -33,38 +36,87 @@ def find_target(mask):
     return maxrect
 
 def capturevideo():
-    # try:
-    cap = cv2.VideoCapture(0)
-    while(cap.isOpened()):
-        #_:T or F, frame:frame
-        _, frame = cap.read()
-        height = frame.shape[0]
-        width = frame.shape[1]
-        #cv2.GaussianBlur(img,filter_range,variance)
-        mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
-        rect = find_target(mask)
-        drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
-        grav = (int(rect[0]+rect[2]/2),int(rect[1]+rect[3]/2))
-        #print("gravity point: {} , {} ".format(grav[0],grav[1]))
-        cv2.line(drawrect,(int(width/2),0),(int(width/2),int(height)),(255,0,0),5)
-        cv2.circle(drawrect,grav, 3, (255, 255, 0), 5) 
-        cv2.imshow("rect",drawrect)
-        cv2.moveWindow('rect', 1000, 0)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        # except:
-        #    pass
-        # finally:
-    cap.release()
-    cv2.destroyAllWindows()
+    global grav
+    try:
+        cap = cv2.VideoCapture(0)
+        while(cap.isOpened()):
+            #_:T or F, frame:frame
+            _, frame = cap.read()
+            height = frame.shape[0]
+            width = frame.shape[1]
+            #cv2.GaussianBlur(img,filter_range,variance)
+            mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
+            rect = find_target(mask)
+            drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
+            grav = (int(rect[0]+rect[2]/2),int(rect[1]+rect[3]/2))
+
+            cv2.line(drawrect,(int(width/2),0),(int(width/2),int(height)),(255,0,0),5)
+            cv2.circle(drawrect,grav, 3, (255, 255, 0), 5) 
+            cv2.imshow("rect",drawrect)
+            cv2.moveWindow('rect', 1000, 0)
+        
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    except:
+        print("exception")
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
+        
+    return grav
+
+
+def capturevideoforangle():
+    global grav
+    try:
+        cap = cv2.VideoCapture(0)
+        while(cap.isOpened()):
+            #_:T or F, frame:frame
+            _, frame = cap.read()
+            height = frame.shape[0]
+            width = frame.shape[1]
+            #cv2.GaussianBlur(img,filter_range,variance)
+            mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
+            rect = find_target(mask)
+            drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
+            grav = (int(rect[0]+rect[2]/2),int(rect[1]+rect[3]/2))
+
+            cv2.line(drawrect,(int(width/2),0),(int(width/2),int(height)),(255,0,0),5)
+            cv2.circle(drawrect,grav, 3, (255, 255, 0), 5) 
+            cv2.imshow("rect",drawrect)
+            cv2.moveWindow('rect', 1000, 0)
+            angle = coordtoangle(left_coord[0],center_coord[0],right_coord[0],grav[0])
+            print(angle)
+        
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    except:
+        print("exception")
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
+        
     return grav
 
 def returngrav():
     capturevideo()
     return grav
 
+def coordtoangle(left_coordx,center_coordx,right_coordx,gravx):
+    if gravx < center_coordx + 10 and gravx > center_coordx - 10:
+        angle = 0
+    elif gravx > center_coordx:
+        if (gravx > left_coordx):
+            gravx = left_coordx
+        angle =  (center_coordx - gravx)/(left_coordx - center_coordx) * 50
+    else:
+        if (gravx < right_coordx):   
+            gravx = right_coordx
+        angle = (gravx - center_coordx) / (right_coordx - center_coordx) * 50
+    return angle
+
+        
 def setting():
-    left_coord,center_coord,right_coord = [],[],[]
     print("First setup. place your handle straight and place light blue point on the center line ")
     center_coord = capturevideo()
     print("place your handle at 45 degrees to the left")
@@ -76,8 +128,10 @@ def setting():
     right_coord = capturevideo()
     print("well done")
     print("your handle sycronizes with car!!")
-    
+    print(left_coord,center_coord,right_coord)
     return left_coord,center_coord,right_coord
 
+        
 if __name__ == "__main__":
-    capturevideo()
+    left_coord,center_coord,right_coord = setting()
+    capturevideoforangle()
