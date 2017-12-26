@@ -24,7 +24,7 @@ class ServoMotor:
         return percentage * n  
 
     def steeringControl(self,percentage):
-        self.pwm.start(self.straight + self.__steeringControl(percentage))
+        self.pwm.ChangeDutyCycle(self.straight + self.__steeringControl(percentage))
 
     def turnLeft(self):
         self.steeringControl(-50)
@@ -33,14 +33,14 @@ class ServoMotor:
         
     def servoControl(self,dir):
         if dir == "left":
-            self.pwm.start(self.left)
+            self.pwm.ChangeDutyCycle(self.left)
         elif dir == "right":
-            self.pwm.start(self.right)
+            self.pwm.ChangeDutyCycle(self.right)
         else:
-            self.pwm.start(self.straight)
+            self.pwm.ChangeDutyCycle(self.straight)
 
     def servoReset(self):
-        self.pwm.start(self.straight)
+        self.pwm.ChangeDutyCycle(self.straight)
 
     def clean(self):
         GPIO.cleanup(self.pin)

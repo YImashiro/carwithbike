@@ -77,15 +77,16 @@ try:
                 motordriver.goBackward(30)
             else:
                 motordriver.stop()
+                
             if pressed[K_LEFT] and pressed[K_RIGHT]:
                 print("K_LEFT, K_RIGHT")
                 servomotor.servoReset()
             elif pressed[K_LEFT]:
                 print("K_LEFT")
-                servomotor.servoControl(-50)
+                servomotor.steeringControl(-50)
             elif pressed[K_RIGHT]:
                 print("K_RIGHT")
-                servomotor.servoControl(50)
+                servomotor.steeringControl(50)
             else:
                 servomotor.servoReset()
             

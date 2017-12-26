@@ -12,40 +12,39 @@ class MotorDriver:
         GPIO.setmode(GPIO.BCM)
         self.channels = [pin1,pin2,pin3]
         GPIO.setup(self.channels,GPIO.OUT)
-            
-    def __setting(self):
-        GPIO.output(self.channels,GPIO.LOW)
-        time.sleep(0.0001)
-        if(self.f):
-            self.pwmf.stop()
-            self.f = 0
-        if(self.b):
-            self.pwmb.stop()
-            self.b = 0
-        
-    def goForward(self,duty=100):
-        self.__setting()
-        self.pwmf = GPIO.PWM(self.channels[0],self.freq)
-        self.pwmf.start(duty)
-        self.f = 1
-        
-    def goBackward(self,duty=100):
-        self.__setting()
+        self.pwmf = GPIO.PWM(self.channels[0],self.freq) 
         self.pwmb = GPIO.PWM(self.channels[1],self.freq)
-        self.pwmb.start(duty)
+        self.pwml = GPIO.PWM(self.channels[2],self.freq)
+        self.pwmf.start(0)
+        self.pwmb.start(0)
+        self.pwml.start(0)
+        
+    def __setting(self):
+        self.pwmf.ChangeDutyCycle(0)
+        self.pwmb.ChangeDutyCycle(0)
+        self.pwml.ChangeDutyCycle(0)
+        time.sleep(0.0001)
+        
+    def goForward(self,duty=50):
+        self.__setting()
+        self.pwmf.ChangeDutyCycle(duty)
+        
+    def goBackward(self,duty=60):
+        self.__setting()
+        self.pwmb.ChangeDutyCycle(duty)
         self.b = 1
         
     def turbo(self):
         self.__setting()
-        pwm = GPIO.PWM(self.channels[0],self.freq)
-        pwm.start(100)
-        sleep(1)
-        pwm.stop()
+        self.pwmf.ChangeDutyCycle(100)
+        time.sleep(1)
+        self.goForward()
 
     def breaking(self):
         self.__setting()
-        GPIO.output(self.channels,GPIO.HIGH)
-        time.sleep(3)
+        self.pwmf.ChangeDutyCycle(100)
+        self.pwmb.ChangeDutyCycle(100)
+        self.pwml.ChangeDutyCycle(100)
 
     def stop(self):
         self.__setting()
