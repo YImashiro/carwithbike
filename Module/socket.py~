@@ -1,0 +1,7 @@
+import socket
+
+client_socket = socket.socket()
+address = '192.169.100.102'
+port = 8010
+client_socket.connect((address,port))
+connection = client_socket.makefile('wb')

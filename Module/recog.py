@@ -67,6 +67,15 @@ def capturevideo():
 
 
 def capturevideoforangle():
+    import socket
+    socket_server = socket.socket()
+    address = '192.168.100.127'
+    port = 8010
+    socket_server.bind((address,port))
+    socket_server.listen(1)
+    _,addr = socket_server.accept()
+    print("connected:{}".format(addr))
+    
     global grav
     try:
         cap = cv2.VideoCapture(0)
@@ -86,8 +95,8 @@ def capturevideoforangle():
             cv2.imshow("rect",drawrect)
             cv2.moveWindow('rect', 1000, 0)
             angle = coordtoangle(left_coord[0],center_coord[0],right_coord[0],grav[0])
-            print(angle)
-        
+            print("angle:{} sent".format(angle))
+            socket.send(angle)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     except:
@@ -95,8 +104,7 @@ def capturevideoforangle():
     finally:
         cap.release()
         cv2.destroyAllWindows()
-        
-    return grav
+        socket.close()
 
 def returngrav():
     capturevideo()
@@ -113,7 +121,7 @@ def coordtoangle(left_coordx,center_coordx,right_coordx,gravx):
         if (gravx < right_coordx):   
             gravx = right_coordx
         angle = (gravx - center_coordx) / (right_coordx - center_coordx) * 50
-    return angle
+    return int(angle)
 
         
 def setting():

@@ -1,0 +1,11 @@
+import socket
+socket_server = socket.socket()
+address = '192.168.100.127'
+port = 8010
+socket_server.bind((address,port))
+socket_server.listen(1)
+_,addr = socket_server.accept()
+print("connected:{}".format(addr))
+
+while(True):
+    data 
