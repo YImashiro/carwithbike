@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import copy
 import threading
+import socket
 grav = (0,0)
 left_coord,center_coord,right_coord = (0,0),(0,0),(0,0)
 
@@ -67,7 +68,6 @@ def capturevideo():
 
 
 def capturevideoforangle():
-    import socket
     socket_server = socket.socket()
     address = '192.168.100.127'
     port = 8010

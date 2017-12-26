@@ -2,7 +2,7 @@ import socket
 
 client_socket = socket.socket()
 #address = '192.169.100.102'
-address = '192.169.100.127'
+address = '192.169.100.192'
 port = 8010
 client_socket.connect((address,port))
 
