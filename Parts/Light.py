@@ -8,7 +8,9 @@ class Light:
         GPIO.setup(self.channels,GPIO.OUT)
         GPIO.output(self.channels,GPIO.LOW)
         self.pwm_left = GPIO.PWM(self.channels[0],self.freq)
-        self.pwm_right = GPIO.PWM(self.channels[2],self.freq)        
+        self.pwm_right = GPIO.PWM(self.channels[2],self.freq)
+        self.pwm_left.start(0)
+        self.pwm_right.start(0)
 
 
     def headLampOn(self):
@@ -17,14 +19,25 @@ class Light:
         GPIO.output(self.channels[1],GPIO.LOW)
         
     def leftWinkerOn(self):
-        self.pwm_left.start(self.duty)
+        self.pwm_left.ChangeDutyCycle(self.duty)
     def leftWinkerOff(self):
-        self.pwm_left.stop()
+        self.pwm_left.ChangeDutyCycle(0)
 
     def rightWinkerOn(self):
-        self.pwm_right.start(self.duty)
+        self.pwm_right.ChangeDutyCycle(self.duty)
     def rightWinkerOff(self):
-        self.pwm_right.stop() 
+        self.pwm_right.ChangeDutyCycle(0)
+
+    def hazardOn(self):
+        self.rightWinkerOff()
+        self.leftWinkerOff()
+        self.rightWinkerOn()
+        self.leftWinkerOn()
+
+    def hazardOff(self):
+        self.rightWinkerOff()
+        self.leftWinkerOff()
+       
 
     def clean(self):
         GPIO.cleanup(self.channels)
@@ -44,6 +57,12 @@ def test():
         light.rightWinkerOn()
         time.sleep(5)
         light.rightWinkerOff()
+        time.sleep(2)
+        light.rightWinkerOn()
+        time.sleep(5)
+        light.rightWinkerOff()
+
+
         print("leftWinker On")
         light.leftWinkerOn()
         time.sleep(5)
