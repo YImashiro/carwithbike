@@ -13,11 +13,11 @@ def calculateAngle():
         time.sleep(1)
         print(angle)
 
-
-recog.setting()
-th1 = threading.Thread(target=calculateAngle,daemon=True)
-th1.start()
         
+recog.setting()
+th1 = threading.Thread(target=calculateAngle)
+th1.start()
+
 ADDRESS = ''
 PORT = 57214
 with socket.socket() as socket:
@@ -32,4 +32,4 @@ with socket.socket() as socket:
             except:
                 print("error")
                 break
-print("end")
+        print("end")

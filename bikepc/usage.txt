@@ -1,0 +1,4 @@
+import server
+server.init()
+server.angle
+の３行でカメラから計算したデータを取得できる。

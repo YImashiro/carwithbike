@@ -1,0 +1,24 @@
+from bikepc import client
+from carpc.Parts import ServoMotor
+
+
+servo = ServoMotor(4)
+
+
+
+
+
+
+
+
+while True:
+    try:
+        servo.steeringContro(int(client.data))
+
+
+
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt")
+        break
+
+print("exit")

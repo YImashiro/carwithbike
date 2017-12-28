@@ -1,0 +1,5 @@
+import server
+import threading
+th1 = threading.Thread(target=server.init)
+th1.start()
+print(server.angle)

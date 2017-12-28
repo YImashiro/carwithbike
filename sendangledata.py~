@@ -1,9 +1,0 @@
-from Module import recog
-
-left_coord,center_coord,right_coord = recog.setting()
-th1 = threading.Tread(target=recog.capturevideo)
-th1.start()
-while True:
-    anlge = coordtoangle(left_coord[0],center_coord[0],right_coord[0],grav[0])
-    
-        

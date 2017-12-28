@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
 import copy
-import threading
-import socket
 
 grav = (0,0)
 left_coord,center_coord,right_coord = (0,0),(0,0),(0,0)
@@ -66,10 +64,6 @@ def capturevideo():
     finally:
         cap.release()
         cv2.destroyAllWindows()
-    return grav
-
-def returngrav():
-    capturevideo()
     return grav
 
 def coordtoangle(left_coordx,center_coordx,right_coordx,gravx):
