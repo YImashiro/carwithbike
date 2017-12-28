@@ -9,7 +9,7 @@ def calculateAngle():
     global angle
     while True:
         recog.capturevideo()
-        angle = recog.coordtoangle(recog.left_coord[0],recog.center_coord[0],recog.right_coord[0],recog.grav[0])
+        angle = "{:<3d}".format(recog.coordtoangle(recog.left_coord[0],recog.center_coord[0],recog.right_coord[0],recog.grav[0]))
         time.sleep(1)
         print(angle)
 
