@@ -15,7 +15,7 @@ def calculateAngle():
 
         
 recog.setting()
-th1 = threading.Thread(target=calculateAngle)
+th1 = threading.Thread(target=calculateAngle,daemon=True)
 th1.start()
 
 ADDRESS = ''

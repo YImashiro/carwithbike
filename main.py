@@ -2,18 +2,23 @@ from carpc import client
 from carpc.Parts import ServoMotor
 from carpc.Parts import MotorDriverwithCSC
 from carpc import MotorwithCSC
+import multiprocessing
 
 
-servo = ServoMotor(4)
-motor = MotorDriverwithCSC(19,26,13)
-
-while True:
-    try:
-        servo.steeringContro(int(client.data))
+def motor():
+    motor = MotorDriverwithCSC(19,26,13)
+    while True:
         motor.gowithCSC(MotorwithCSC.duty,MotorwithCSC.cadence)
 
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt")
-        break
+def servo():
+    servo = ServoMotor(4)
+    while True:
+        servo.steeringContro(int(client.data))
+           
 
-print("exit")
+p1 = multiprocessing.Process(target=motor)
+p2 = multiprocessing.Process(target=servo)
+p1.start()
+p2.start()
+
+

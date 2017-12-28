@@ -10,7 +10,7 @@ with socket.socket() as socket:
         data = socket.recv(3)
         if not data:
             break
-        print(data.decode())
+        print("image data {}".format(data.decode()))
         time.sleep(1)
 
 print("end")
