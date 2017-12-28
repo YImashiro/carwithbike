@@ -6,7 +6,6 @@ import time
 class MotorDriver:
     freq = 100
     duty = 100
-    f,b = 0,0
 
     def __init__(self,pin1,pin2,pin3):
         GPIO.setmode(GPIO.BCM)
@@ -25,15 +24,14 @@ class MotorDriver:
         self.pwml.ChangeDutyCycle(0)
         time.sleep(0.0001)
         
-    def goForward(self,duty=50):
+    def goForward(self,duty=60):
         self.__setting()
         self.pwmf.ChangeDutyCycle(duty)
         
     def goBackward(self,duty=60):
         self.__setting()
         self.pwmb.ChangeDutyCycle(duty)
-        self.b = 1
-        
+               
     def turbo(self):
         self.__setting()
         self.pwmf.ChangeDutyCycle(100)
@@ -52,6 +50,16 @@ class MotorDriver:
     def clean(self):
         GPIO.cleanup(self.channels)
 
+class MotorDriverwithCSC(MotorDriver):
+    def gowithCSC(self,duty,cadence):
+        if duty == 0:
+            if cadence > 100:
+                cadence = 100
+            self.goBackward(cadence)
+        else:
+            self.goForward(duty)
+        
+'''
 def test():
     try:
         motor= MotorDriver(19,26,13)
@@ -74,3 +82,4 @@ def test():
 
 if __name__ == '__main__':
     test()
+'''

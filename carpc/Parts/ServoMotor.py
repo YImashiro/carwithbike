@@ -11,6 +11,7 @@ class ServoMotor:
         self.freq = 50.0
         self.period = 1000.0/self.freq
         self.pin = pin
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin,GPIO.OUT)
         self.pwm = GPIO.PWM(self.pin,self.freq)
         #duty ratio

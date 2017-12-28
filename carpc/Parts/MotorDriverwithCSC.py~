@@ -1,9 +1,0 @@
-import MotorDriver
-
-class MotorDriverwithCSC(MotorDriver):
-    def goForwardwithCSC(speed):
-        self.speed = speed
-        self.__setting()
-        self.pwmfc = GPIO.PWM(self.channels[0],self.freq)
-        self.pwmfc.start(self.speed)
-        self.f = 1
