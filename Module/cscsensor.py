@@ -8,6 +8,7 @@ class DelegateForCSC(btle.DefaultDelegate):
     wheelrevlast, crankrevlast = 0, 0
     lwet,lcet = 0,0
     flag = 1
+    speed,cadence = 0,0
     
     def __init__(self):
         super().__init__()
@@ -65,17 +66,16 @@ class DelegateForCSC(btle.DefaultDelegate):
         elif data[0] == 3:
             self.__speed(data)
             self.__cadence(data)
+            print(self.speed)
 
-if __name__ == "__main__":       
+def init():
     peripheral = Peripheral("d8:e3:66:b3:b9:95",btle.ADDR_TYPE_RANDOM)
-    delegate = DelegateForCSC()
     peripheral.withDelegate(delegate)
     peripheral.writeCharacteristic(12,(1).to_bytes(2, byteorder='little'))
 
     try:
         while delegate.flag:
             if peripheral.waitForNotifications(10):
-                delegate.speed
                 continue
             break
     except:
@@ -85,6 +85,7 @@ if __name__ == "__main__":
         peripheral.disconnect()
         sys.exit(0)
 
+delegate = DelegateForCSC()
 
-
-    
+if __name__ == "__main__":       
+    init()

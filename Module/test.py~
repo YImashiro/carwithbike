@@ -1,0 +1,9 @@
+import cscsensor
+import threading
+import time
+thread1 = threading.Thread(name="csc",target=cscsensor.init)
+thread1.start()
+
+while True:
+    print("speed:{}, cadence:{}".format(cscsensor.delegate.speed,cscsensor.delegate.cadence))
+    time.sleep(1)

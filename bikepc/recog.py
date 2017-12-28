@@ -3,8 +3,10 @@ import numpy as np
 import copy
 import threading
 import socket
+
 grav = (0,0)
 left_coord,center_coord,right_coord = (0,0),(0,0),(0,0)
+angle = 0
 
 def pink_detect(img):
     '''RGBtoHSV
@@ -38,8 +40,8 @@ def find_target(mask):
 
 def capturevideo():
     global grav
+    cap = cv2.VideoCapture(0)
     try:
-        cap = cv2.VideoCapture(0)
         while(cap.isOpened()):
             #_:T or F, frame:frame
             _, frame = cap.read()
@@ -48,6 +50,7 @@ def capturevideo():
             #cv2.GaussianBlur(img,filter_range,variance)
             mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
             rect = find_target(mask)
+            print("a")
             drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
             grav = (int(rect[0]+rect[2]/2),int(rect[1]+rect[3]/2))
 
@@ -63,48 +66,7 @@ def capturevideo():
     finally:
         cap.release()
         cv2.destroyAllWindows()
-        
     return grav
-
-
-def capturevideoforangle():
-    socket_server = socket.socket()
-    address = '192.168.100.127'
-    port = 8010
-    socket_server.bind((address,port))
-    socket_server.listen(1)
-    _,addr = socket_server.accept()
-    print("connected:{}".format(addr))
-    
-    global grav
-    try:
-        cap = cv2.VideoCapture(0)
-        while(cap.isOpened()):
-            #_:T or F, frame:frame
-            _, frame = cap.read()
-            height = frame.shape[0]
-            width = frame.shape[1]
-            #cv2.GaussianBlur(img,filter_range,variance)
-            mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
-            rect = find_target(mask)
-            drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
-            grav = (int(rect[0]+rect[2]/2),int(rect[1]+rect[3]/2))
-
-            cv2.line(drawrect,(int(width/2),0),(int(width/2),int(height)),(255,0,0),5)
-            cv2.circle(drawrect,grav, 3, (255, 255, 0), 5) 
-            cv2.imshow("rect",drawrect)
-            cv2.moveWindow('rect', 1000, 0)
-            angle = coordtoangle(left_coord[0],center_coord[0],right_coord[0],grav[0])
-            print("angle:{} sent".format(angle))
-            socket.send(angle)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-    except:
-        print("exception")
-    finally:
-        cap.release()
-        cv2.destroyAllWindows()
-        socket.close()
 
 def returngrav():
     capturevideo()
@@ -139,7 +101,6 @@ def setting():
     print(left_coord,center_coord,right_coord)
     return left_coord,center_coord,right_coord
 
-        
 if __name__ == "__main__":
     left_coord,center_coord,right_coord = setting()
-    capturevideoforangle()
+    anlge = coordtoangle(left_coord[0],center_coord[0],right_coord[0],grav[0])
