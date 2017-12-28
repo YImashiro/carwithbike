@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import RPi.GPIO as GPIO
 import sys
 import time
 from bluepy.btle import DefaultDelegate
