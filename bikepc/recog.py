@@ -42,13 +42,13 @@ def capturevideo():
     try:
         while(cap.isOpened()):
             #_:T or F, frame:frame
+            print(grav)
             _, frame = cap.read()
             height = frame.shape[0]
             width = frame.shape[1]
             #cv2.GaussianBlur(img,filter_range,variance)
             mask = pink_detect(cv2.GaussianBlur(frame,(25,25),3))
             rect = find_target(mask)
-            print("a")
             drawrect = cv2.rectangle(frame,tuple(rect[0:2]),(rect[0]+rect[2],rect[1]+rect[3]), (0,0,255), thickness=2)
             grav = (int(rect[0]+rect[2]/2),int(rect[1]+rect[3]/2))
 
