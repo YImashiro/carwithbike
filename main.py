@@ -8,8 +8,9 @@ import time
 
 
 def motor():
-    th1 = threading.Thread(target=cscsensor.init)
-    th1.start()
+    print("a")
+    th2 = threading.Thread(target=cscsensor.init)
+    th2.start()
     motor = MotorDriver.MotorDriverwithCSC(19,26,13)
     while True:
         duty = cscsensor.delegate.speed
@@ -25,12 +26,12 @@ def servo():
     while th1.is_alive():
         time.sleep(1)
         print("main {}".format(client.angle))
-        servo.steeringControl(int(client.angle))
+        servo.steeringControl(client.angle)
            
 
 p1 = multiprocessing.Process(target=motor)
 p2 = multiprocessing.Process(target=servo)
-p2.start()
 p1.start()
+p2.start()
 time.sleep(1000)
 
